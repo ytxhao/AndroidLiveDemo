@@ -335,6 +335,7 @@ void add_rtmp_packet(RTMPPacket *packet){
  * 发送h264 SPS与PPS参数集
  */
 void add_264_sequence_header(unsigned char* pps,unsigned char* sps,int pps_len,int sps_len){
+	//H264 配置信息长度占用了前16个字节
 	int body_size = 16 + sps_len + pps_len; //按照H264标准配置SPS和PPS，共使用了16字节
 	RTMPPacket *packet = (RTMPPacket *) malloc(sizeof(RTMPPacket));
 	//RTMPPacket初始化
@@ -343,6 +344,7 @@ void add_264_sequence_header(unsigned char* pps,unsigned char* sps,int pps_len,i
 
 	unsigned char * body = (unsigned char *) packet->m_body;
 	int i = 0;
+	//参考H264直播总结 H264 header信息解析
 	//二进制表示：00010111
 	body[i++] = 0x17;//VideoHeaderTag:FrameType(1=key frame)+CodecID(7=AVC)
 	body[i++] = 0x00;//AVCPacketType = 0表示设置AVCDecoderConfigurationRecord
@@ -464,9 +466,9 @@ JNIEXPORT void JNICALL Java_com_ytx_live_jni_PushNative_fireVideo
 		*(v + i) = *(nv21_buffer + y_len + i * 2);
 	}
 
-	//h264编码得到NALU数组
+	//h264编码后得到的指向NALU数组指针(*nal)
 	x264_nal_t *nal = NULL; //NAL
-	int n_nal = -1; //NALU的个数
+	int n_nal = -1; //h264编码后得到NALU的个数
 	//进行h264编码
 	if(x264_encoder_encode(video_encode_handle,&nal, &n_nal,&pic_in,&pic_out) < 0){
 		LOGE("%s","编码失败");
