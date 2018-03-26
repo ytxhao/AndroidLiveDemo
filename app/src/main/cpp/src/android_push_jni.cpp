@@ -7,6 +7,7 @@
 #define LOGE(FORMAT,...) __android_log_print(ANDROID_LOG_ERROR,"demo",FORMAT,##__VA_ARGS__)
 
 #include <pthread.h>
+#include <malloc.h>
 #include "queue.h"
 #include "x264/x264.h"
 #include "rtmp/rtmp.h"

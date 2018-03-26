@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements LiveStateChangeLi
 
         SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surface);
         //相机图像的预览
-        live = new LivePusher(surfaceView.getHolder());
+        live = new LivePusher(surfaceView.getHolder(),this);
     }
 
     /**
